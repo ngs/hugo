@@ -897,6 +897,12 @@ func (p *Page) analyzePage() {
 		} else {
 			p.readingTime = (p.wordCount + 212) / 213
 		}
+
+		if len(p.params) == 0 {
+			p.params = map[string]interface{}{}
+		}
+
+		p.params["words"] = p.PlainWords()
 	})
 }
 

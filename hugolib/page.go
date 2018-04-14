@@ -21,6 +21,7 @@ import (
 	"unicode"
 
 	"github.com/gohugoio/hugo/related"
+	"github.com/ikawaha/kagome/tokenizer"
 
 	"github.com/bep/gitmap"
 
@@ -469,7 +470,15 @@ func (p *Page) initPlain() {
 
 func (p *Page) initPlainWords() {
 	p.plainWordsInit.Do(func() {
-		p.plainWords = strings.Fields(p.Plain())
+		t := tokenizer.New()
+		tokens := t.Tokenize(p.Plain())
+		var plainWords []string = []string{}
+		for _, token := range tokens {
+			if len(token.Features()) > 0 && token.Features()[0] == "名詞" {
+				plainWords = append(plainWords, token.Surface)
+			}
+		}
+		p.plainWords = plainWords
 		return
 	})
 }
